@@ -4,8 +4,10 @@
 
 #include <cstring>
 
+#ifndef COCO_CART
 #ifdef ESP_PLATFORM
 #include <driver/dac.h>
+#endif /* COCO_CART */
 #endif
 
 #include "../../include/debug.h"
@@ -81,5 +83,6 @@ void drivewireCassette::setup()
 void drivewireCassette::shutdown()
 {
 }
+
 
 #endif /* BUILD_COCO */
