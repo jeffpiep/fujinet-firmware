@@ -158,7 +158,7 @@ CONFIG_APPTRACE_LOCK_ENABLE=y
 #
 # Bluetooth
 #
-CONFIG_BT_ENABLED=n
+CONFIG_BT_ENABLED=y
 
 #
 # Bluetooth controller
