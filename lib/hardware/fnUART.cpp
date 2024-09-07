@@ -82,6 +82,8 @@ void UARTManager::begin(int baud)
     uart_param_config(_uart_num, &uart_config); // now always gets called.
 // #endif
 
+    Debug_printf("UART  %d configured - JRP\n", _uart_num);
+
     int tx, rx;
     if (_uart_num == 0)
     {
@@ -106,6 +108,8 @@ void UARTManager::begin(int baud)
     }
 
     uart_set_pin(_uart_num, tx, rx, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+
+    Debug_printf("UART  %d pins set - JRP\n", _uart_num);
 
 #ifdef BUILD_ADAM
     if (_uart_num == 2)
@@ -149,6 +153,7 @@ void UARTManager::begin(int baud)
 
     // Set initialized.
     _initialized = true;
+    Debug_printf("UART  %d initialized - JRP", _uart_num);
 }
 
 /* Discards anything in the input buffer
