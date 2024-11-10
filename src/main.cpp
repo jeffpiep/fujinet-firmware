@@ -38,6 +38,10 @@
 #include "fnBluetooth.h"
 #endif
 
+#ifdef USBPOC
+#include <cdc_acm_host.h>
+#endif
+
 // fnSystem is declared and defined in fnSystem.h/cpp
 // fnBtManager is declared and defined in fnBluetooth.h/cpp
 // fnLedManager is declared and defined in led.h/cpp
@@ -449,9 +453,25 @@ void main_setup(int argc, char *argv[])
 
 #endif /* BUILD_S100*/
 
+#ifdef USBPOC
+    void usbpoc()
+	{
+
+
+
+
+
+		while (1) {}
+	}
+#endif
+
+
 // Main high-priority service loop
 void fn_service_loop(void *param)
 {
+    #ifdef USBPOC
+    usbpoc();
+    #endif
 #ifdef ESP_PLATFORM
     main_setup();
 #else
