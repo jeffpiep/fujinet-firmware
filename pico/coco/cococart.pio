@@ -9,7 +9,7 @@
 .define public CLKPIN     25
 ; .define public RWPIN      24
 .define public CTSPIN     26
-.define public ROMWIDTH   14
+.define public ROMWIDTH   13
 .define public DATAWIDTH   8
 
 ;.define public BUGPIN     27
