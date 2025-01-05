@@ -73,7 +73,11 @@ void setup_rom_emulator()
 
 	uint offset = pio_add_program(pioblk_rw, &rom_program);
     printf("\nLoaded rom program at %d\n", offset);
-    rom_program_init(pioblk_rw, SM_ROM, offset);                                    // configure the PIO
+    rom_program_init(pioblk_rw, SM_ROM, offset);
+    
+return;
+    
+                                    // configure the PIO
     pio_sm_put(pioblk_rw, SM_ROM, (uintptr_t)rom >> ROMWIDTH);                      // push the ROM base address into the PIO FIFO
     pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_pull(false, true));     // pull the ROM base address from the FIFO into OSR
     pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_mov(pio_y, pio_osr));   // move OSR to Y
