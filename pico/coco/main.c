@@ -1,30 +1,32 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
-// #include "pico/util/queue.h"
-// #include "hardware/uart.h"
 #include "hardware/pio.h"
 #include "hardware/dma.h"
 
-#include "rom.h"
+#include "rom.h"  // defines the default ROM image
 
 // define how the GPIOs are connected to the CoCo Bus
 // these are used in main.c and cococart.pio
-#define PINROMADDR  8
-#define PINROMDATA  0
+#define PINROMADDR  8   // base GPIO for address word
+#define PINROMDATA  0   // base GPIO for data byte
+#define ADDRWIDTH  16   // 64k address space
+//      DATAWIDTH   8   - defined in in cococart.pio
+//      ROMWIDTH   14   - defined in in cococart.pio
+// coco control pins
 #define RWPIN      24
 //      CLKPIN     25 - defined in cococart.pio
 //		  CTSPIN	   26 - defined in cococart.pio	
 #define NMIPIN     27
-#define ADDRWIDTH  16 // 64k address space
-// #define ROMWIDTH   14 // 16k cart rom space
-// #define DATAWIDTH   8
+#define RSTPIN     28   // when in USB comms mode otherwise used by PIO UART to ESP
+#define CRTPIN     29   // when in USB comms mode otherwise used by PIO UART to ESP
 
 #include "cococart.pio.h"
 #include "uart_rx.pio.h"
 #include "uart_tx.pio.h"
 
 /**
+ * put the input (read only) SM's in PIO0: read data, read address
  * put the output SM's in PIO1: data write and rom emulator
  *
  * from Section 3.5.6.1 in RP2040 datasheet:
@@ -46,11 +48,11 @@ PIO pioblk_rw = pio1;
 #define SM_WRITE 2
 #define SM_UART_TX 0
 
-uint8_t ccc, fff;
-
-#define SERIAL_BAUD 115200
+// set up the PIO uart - will go away when we switch to USB comm's
+#define SERIAL_BAUD 1000000 //115200
 #define PIO_RX_PIN 28 //A2
 #define PIO_TX_PIN 29 //A3
+
 void setup_pio_uart()
 {
   int offset = pio_add_program(pioblk_ro, &uart_rx_program);
@@ -71,12 +73,12 @@ void setup_rom_emulator()
 
 	uint offset = pio_add_program(pioblk_rw, &rom_program);
     printf("\nLoaded rom program at %d\n", offset);
-    rom_program_init(pioblk_rw, SM_ROM, offset);
-    pio_sm_put(pioblk_rw, SM_ROM, (uintptr_t)rom >> ROMWIDTH);
-    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_pull(false, true));
-    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_mov(pio_y, pio_osr));
-    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_out(pio_null, 1)); 
-    pio_sm_set_enabled(pioblk_rw, SM_ROM, true);
+    rom_program_init(pioblk_rw, SM_ROM, offset);                                    // configure the PIO
+    pio_sm_put(pioblk_rw, SM_ROM, (uintptr_t)rom >> ROMWIDTH);                      // push the ROM base address into the PIO FIFO
+    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_pull(false, true));     // pull the ROM base address from the FIFO into OSR
+    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_mov(pio_y, pio_osr));   // move OSR to Y
+    pio_sm_exec_wait_blocking(pioblk_rw, SM_ROM, pio_encode_out(pio_null, 1));      // not sure why I do this - maybe for autopull, but that's not enabled
+    pio_sm_set_enabled(pioblk_rw, SM_ROM, true);                                    // start up the PIO
 
     chan_rom_addr = dma_claim_unused_channel(true);
     cfg_rom_addr = dma_channel_get_default_config(chan_rom_addr);
