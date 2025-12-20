@@ -47,6 +47,7 @@
 #include "mac/mac.h"
 #define SYSTEM_BUS MAC
 #define FN_BUS_PORT fnUartBUS
+#define FN_CTL_PORT fnUartCTL
 #endif
 
 #ifdef BUILD_S100

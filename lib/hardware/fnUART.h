@@ -10,6 +10,7 @@
 #    define FN_UART_BUS   UART_NUM_1
 #  else
 #    define FN_UART_BUS   UART_NUM_2
+#    define FN_UART_CTL   UART_NUM_1
 #  endif
 #endif // ESP_PLATFORM
 
@@ -162,6 +163,9 @@ public:
   // Serial "bus port" (CoCo uses fnDwCom - configurable serial or TCP (Becker) drivewire port)
   #ifndef BUILD_COCO
     extern UARTManager fnUartBUS;
+    #ifndef BUILD_RS232
+      extern UARTManager fnUartCTL;
+    #endif
   #endif
 #endif
 

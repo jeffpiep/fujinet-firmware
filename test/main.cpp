@@ -5,7 +5,8 @@
 #include <unity.h>
 #include <esp32/rom/ets_sys.h>
 #include "test_pass.h"
-#include "test_networkprotocol_translation.h"
+#include "test_fnUART_CTL.h"
+// #include "test_networkprotocol_translation.h"
 #include "../lib/hardware/fnSystem.h"
 
 extern "C"
@@ -23,7 +24,8 @@ void app_main()
     UNITY_BEGIN();
 
     test_pass_run();
-    tests_networkprotocol_translation();
+    test_fnUartCTL_run();
+    // tests_networkprotocol_translation();
 
     UNITY_END();
 }

@@ -12,8 +12,8 @@
 /* UART */
 #define PIN_UART0_RX            GPIO_NUM_3  // fnUART.cpp
 #define PIN_UART0_TX            GPIO_NUM_1
-#define PIN_UART1_RX            GPIO_NUM_9
-#define PIN_UART1_TX            GPIO_NUM_10
+#define PIN_UART1_RX            GPIO_NUM_16
+#define PIN_UART1_TX            GPIO_NUM_17
 #define PIN_UART2_RX            GPIO_NUM_33
 #define PIN_UART2_TX            GPIO_NUM_26
 
