@@ -163,9 +163,7 @@ public:
   // Serial "bus port" (CoCo uses fnDwCom - configurable serial or TCP (Becker) drivewire port)
   #ifndef BUILD_COCO
     extern UARTManager fnUartBUS;
-    #ifndef BUILD_RS232
-      extern UARTManager fnUartCTL;
-    #endif
+    extern UARTManager fnUartCTL;
   #endif
 #endif
 

@@ -133,6 +133,18 @@ void main_setup(int argc, char *argv[])
     Debug_printf("\r\n\r\n--~--~--~--\nFujiNet %s Started @ %lu\r\n", fnSystem.get_fujinet_version(), startms);
     Debug_printf("Starting heap: %u\r\n", fnSystem.get_free_heap_size());
     Debug_printv("Heap: %lu\r\n",esp_get_free_internal_heap_size());
+   
+    //#ifdef BUILD_MAC
+    fnUartCTL.begin(9600); // Mac bus speed
+    uart_set_line_inverse(FN_UART_CTL, UART_SIGNAL_TXD_INV | UART_SIGNAL_RXD_INV);
+    Debug_println("Mac bus UART initialized");
+    while (true)
+    {
+    fnUartCTL.println("\r\nFujiNet Mac Bus UART Control");
+    fnSystem.delay(1000);
+    }
+    //#endif // BUILD_MAC
+
     #ifdef ATARI
     Debug_printf("PsramSize %u\r\n", fnSystem.get_psram_size());
     Debug_printf("himem phys %u\r\n", esp_himem_get_phys_size());
