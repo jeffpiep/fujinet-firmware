@@ -151,9 +151,9 @@ void macBus::service(void)
       case 'R':
       case 'T':
       case 'W':
-        // fnLedManager.set(LED_BUS, true);
+        fnLedManager.set(LED_BUS, true);
         theFuji.get_disks(_active_DCD_disk)->disk_dev.process(c);
-        // fnLedManager.set(LED_BUS, false);
+        fnLedManager.set(LED_BUS, false);
         break;
       default:
         break;
@@ -213,6 +213,25 @@ void macBus::shutdown(void)
   }
   Debug_printf("All devices shut down.\n");
 }
+
+/**
+ * Feb 22 2026
+ * pulling in IWM devices here that operate over the serial bus - modem, network, printer, cpm, etc.
+ * modem is first. CPM should work without much trouble.
+ *
+ * we already have a service loop for DCD and floppy commands coming over the fnUartBUS
+ * Modem, CPM, need to go over the fnUartCTL bus. 
+ * The fnUartCTL will also service the FujiNet configuration device.
+ * 
+ * We'll need a way to switch between Modem, CPM and FujiNet config commands coming over the fnUartCTL.
+ * CPM has some sort of initialization sequence, IIRC. Does Modem look for that?
+ * 
+ * 
+ */
+
+
+
+
 
 macBus MAC; // global smartport bus variable
 
