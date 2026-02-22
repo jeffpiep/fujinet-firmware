@@ -339,6 +339,8 @@ void macFloppy::process(mac_cmd_t cmd)
   uint8_t buffer[512];
   char s[3];
 
+  
+
   switch (cmd)
   {
   case 'R':

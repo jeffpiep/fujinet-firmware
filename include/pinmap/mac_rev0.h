@@ -12,15 +12,15 @@
 /* UART */
 #define PIN_UART0_RX            GPIO_NUM_3  // fnUART.cpp
 #define PIN_UART0_TX            GPIO_NUM_1
-#define PIN_UART1_RX            GPIO_NUM_16
-#define PIN_UART1_TX            GPIO_NUM_17
+#define PIN_UART1_RX            GPIO_NUM_25
+#define PIN_UART1_TX            GPIO_NUM_27
 #define PIN_UART2_RX            GPIO_NUM_33
 #define PIN_UART2_TX            GPIO_NUM_26
 
 /* Buttons */
 #define PIN_BUTTON_A            GPIO_NUM_0  // keys.cpp
 #define PIN_BUTTON_B            GPIO_NUM_NC // No Button B
-#define PIN_BUTTON_C            GPIO_NUM_14
+#define PIN_BUTTON_C            GPIO_NUM_4
 
 /* LEDs */
 #define PIN_LED_WIFI            GPIO_NUM_2  // led.cpp

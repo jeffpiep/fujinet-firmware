@@ -2,7 +2,7 @@
 #include "mac.h"
 #include "../../include/debug.h"
 #include "../device/mac/fuji.h"
-
+#include "led.h"
 #include "mac_ll.h"
 
 
@@ -10,15 +10,26 @@ void macBus::setup(void)
 {
   Debug_printf(("\r\nMAC FujiNet based on FujiApple\r\n"));
   fnUartBUS.begin(_mac_baud_rate);
+  fnUartCTL.begin(9600); // Mac serial port speed - need to make parameter
+  // uart_set_line_inverse(FN_UART_CTL, UART_SIGNAL_TXD_INV | UART_SIGNAL_RXD_INV);
 
-  // GPIO needs to read Head Select (SEL)
+// while (1)
+// {
+//   const char *testmsg = "FujiNet Mac Bus UART Control\r\n";
+//   fnUartCTL.print(testmsg);
+//   Debug_printf(testmsg);
+//   fnSystem.delay(1000);
+// }
+
   floppy_ll.setup_gpio();
   Debug_printf("\r\nGPIO configured");
   
   floppy_ll.setup_rmt();
   Debug_printf("\r\nRMT configured for Floppy Output");
-}
 
+// test code - transmit message on CTL port
+
+}
 /**
  * 699-0452-A Double Sided floppy requirement document
  * 
@@ -99,6 +110,7 @@ void macBus::service(void)
         floppy_ll.start();
         fnUartBUS.write('M');
         // fnUartBUS.flush();
+        fnLedManager.set(LED_BUS, true);
         break;
       case 6:
         // turn motor off
@@ -106,6 +118,7 @@ void macBus::service(void)
         floppy_ll.stop();
         fnUartBUS.write('F');
         // fnUartBUS.flush();
+        fnLedManager.set(LED_BUS, false);
         break;
       case 7:
         // eject
@@ -114,6 +127,7 @@ void macBus::service(void)
         theFuji.get_disks(4)->disk_dev.unmount();
         fnUartBUS.write('E');
         // fnUartBUS.flush();
+        fnLedManager.set(LED_BUS, false);
         break;
       default:
         Debug_printf("%03d");
@@ -137,7 +151,9 @@ void macBus::service(void)
       case 'R':
       case 'T':
       case 'W':
+        // fnLedManager.set(LED_BUS, true);
         theFuji.get_disks(_active_DCD_disk)->disk_dev.process(c);
+        // fnLedManager.set(LED_BUS, false);
         break;
       default:
         break;

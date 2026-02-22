@@ -4,9 +4,11 @@
 
 
 #include "fnUART.h"
+#include "fnSystem.h"
 
 #include <soc/uart_reg.h>
 #include <hal/gpio_types.h>
+#include <driver/gpio.h>
 
 #include <cstring>
 
@@ -109,6 +111,15 @@ void UARTManager::begin(int baud)
     }
 
     uart_set_pin(_uart_num, tx, rx, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+
+#ifdef BUILD_MAC
+    // swap line polarity for the Mac serial port RS422 levels
+    if (_uart_num == 1)
+	{
+		uart_set_line_inverse(_uart_num, UART_SIGNAL_TXD_INV | UART_SIGNAL_RXD_INV);
+		Debug_println("UART line inverse set for Mac Control bus");
+	}
+#endif /* BUILD_MAC */
 
 #ifdef BUILD_ADAM
     if (_uart_num == 2)
