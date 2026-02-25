@@ -404,7 +404,7 @@ void main_setup(int argc, char *argv[])
     FileSystem *ptrfs = fnSDFAT.running() ? (FileSystem *)&fnSDFAT : (FileSystem *)&fsFlash;
 
     sioR = new macModem(ptrfs, Config.get_modem_sniffer_enabled());
-    MAC.addDevice(sioR,mac_fujinet_type_t::Modem);
+    // MAC.addDevice(sioR,mac_fujinet_type_t::Modem);
     MAC.setup();
     theFuji.setup(&MAC);
 
